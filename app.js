@@ -9,6 +9,8 @@ var usersRouter = require('./routes/users');
 
 const moviesRouter = require('./routes/movies');
 
+const errorHandler = require('./public/javascripts/errorHandlerMiddleware');
+
 var app = express();
 
 const mongoose = require('mongoose');
@@ -20,6 +22,7 @@ async function main() {
   await mongoose.connect('mongodb://127.0.0.1:27017/TFDb');
 }
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -30,24 +33,14 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api', moviesRouter);
+app.use('/api/v1/movies', moviesRouter);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
-});
 
-// error handler
-app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+app.use(errorHandler);
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+
 
 module.exports = app;

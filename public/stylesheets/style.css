@@ -1,8 +1,28 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background-color: #fff1ac; 
+  font-family: 'Courier New', Courier, monospace;
+  margin: 0;
+  padding: 0;
 }
 
-a {
-  color: #00B7FF;
+header {
+  background-color: #762f00;
+  color: white;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+}
+
+footer {
+  background-color: #762f00;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+.content {
+  padding: 20px;
 }
