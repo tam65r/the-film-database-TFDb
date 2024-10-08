@@ -6,40 +6,65 @@ const mongoose = require('mongoose');
 const Movie  = require('../models/film');
 
 
-router.get('/movies', async function(req, res, next) {
-    try {
-        const movies = await Movie.find(); 
-        console.log('success');
-        res.send(movies);
-      } catch (error) {
-        res.send('ERROR');
-      }
+router.get('/search', async function(req, res, next) {
+    const movieName = req.query.name;
+    const movieRuntime = req.query.runtime;
+
+    let movies;
+
+    if (!movieRuntime && !movieName) {
+      const error = new Error('Not a valid query');
+      error.status = 400; 
+      return next(error); 
+    } else if (!movieRuntime) {
+       movies = await Movie.find({"film.name": { $regex: movieName, $options: 'i' }});
+    } else if(!movieName) {
+       movies = await Movie.find({"film.runtime": {$lte: Number(movieRuntime)} });
+    } else{
+       movies = await Movie.find({"film.name": { $regex: movieName, $options: 'i' }, "film.runtime": {$lte: Number(movieRuntime)} });
+    }
+
+ 
+    
+    const films = [];
+    
+    movies.forEach(film => {
+      films.push(film.film);
+    });
+
+    res.json({
+      'query': movieName + movieRuntime,
+      'total_pages': 10,
+      'current_page': 1,
+      'movies': films,
+    });
 
 });
 
-router.get('/movie', async function(req, res, next) {
-    try {
-        const movies = await Movie.find({"film.name": 'Beverly Hills Cop'});
-        console.log('success');
-        res.send(movies);
-      } catch (error) {
-        res.send('ERROR');
-      }
+
+router.get('/search2', async function(req, res, next) {
+  const temp = parseInt(req.query.name);
+  
+  const movies = await Movie.find({ "film.runtime": {$lte: temp}  });
+  console.log(movies)
+  const films = [];
+  
+  movies.forEach(film => {
+    films.push(film.film);
+  });
+
+
+  res.json({
+    'query': temp,
+    'total_pages': 10,
+    'current_page': 1,
+    'movies': films,
+  });
 
 });
 
 
-router.get('/search', async function(req, res) {
-  let page = req.query.page;
 
-  if (page == undefined) {
-    page = 1;
-  }
-
-  let limit = req.query.limit;
-
-  res.status(200).send({ page: page });
-});
 
 
 router.get('/find/:movie_id', async function(req, res, next) {
@@ -55,6 +80,6 @@ router.get('/find/:movie_id', async function(req, res, next) {
 
   res.status(200).render('movie', movie);
 });
-
+ 
 
 module.exports = router;
