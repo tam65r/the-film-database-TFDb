@@ -3,66 +3,71 @@ const router = express.Router();
 
 const mongoose = require('mongoose');
 
-const Schema = mongoose.Schema;
-
-const FilmSchema = new Schema({
-  id: { type: String, required: true },
-  title: { type: String, required: true },
-  vote_average: { type: Number, required: true },
-  vote_count: { type: Number, required: true },
-  status: { type: String, required: true },
-  release_date: { type: Date, required: true },
-  revenue: { type: Number, required: true },
-  runtime: { type: Number, required: true },
-  adult: { type: Boolean, required: true },
-  backdrop_path: { type: String },
-  budget: { type: Number, required: true },
-  homepage: { type: String },
-  imdb_id: { type: String, required: true },
-  original_language: { type: String, required: true },
-  original_title: { type: String, required: true },
-  overview: { type: String, required: true },
-  popularity: { type: Number, required: true },
-  poster_path: { type: String },
-  tagline: { type: String },
-  genres: { type: [String], required: true }, 
-  production_companies: { type: [String], required: true },
-  production_countries: { type: [String], required: true }, 
-  spoken_languages: { type: [String], required: true }, 
-  keywords: { type: [String], required: true }, 
-}, { collection: 'films' });
-
-
-const Film  = mongoose.model("Film", FilmSchema);
+const Film  = require("../models/film");
 
 
 router.get('/search', async function(req, res, next) {
-    const filmName = req.query.name;
-    const filmRuntime = Number(req.query.runtime);
 
-    let films;
+  const filmName = req.query.name;
+  const filmRuntime = parseInt(req.query.runtime) || null;
+  const queryOperator = req.query.operator || 'eq';
 
-    if (!filmRuntime && !filmName) {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 10;
+
+  const skip = (page - 1) * limit;
+  
+  const query = {};
+
+  const operatorMapping = {
+    eq: '$eq',
+    gte: '$gte',
+    lte: '$lte',
+    gt: '$gt',
+    lt: '$lt'
+};
+
+  if (filmName) {
+      query.title = { $regex: filmName, $options: 'i' }; 
+  }
+  if (filmRuntime) {
+      const operator = operatorMapping[queryOperator] || '$eq';
+      query.runtime = { [operator]: filmRuntime }; 
+  }
+
+  if (Object.keys(query).length === 0) {
       const error = new Error('Not a valid query');
-      error.status = 400; 
-      return next(error); 
-    } else if (!filmRuntime) {
-       films = await Film.find({"title": { $regex: filmName, $options: 'i' }});
-    } else if(!filmName) {
-       films = await Film.find({"runtime": {$lte: filmRuntime} });
-    } else{
-       films = await Film.find({"title": { $regex: filmName, $options: 'i' }, "runtime": {$lte: filmRuntime} });
+      error.status = 400;
+      return next(error);
+  }
+
+  try {
+      
+    const totalCount = await Film.countDocuments(query);
+    const totalPages = Math.ceil(totalCount / limit);
+
+    if (page > totalPages) {
+      const error = new Error('Page');
+      error.status = 400;
+      throw error;
     }
 
-  
+    const films = await Film.find(query)
+        .skip(skip)
+        .limit(limit);
+
 
     res.json({
-      'query': filmName + filmRuntime,
-      'total_pages': 10,
-      'current_page': 1,
-      'films': films,
+        query: filmName,
+        runtime: filmRuntime,
+        total_pages: totalPages,
+        current_page: page,
+        limit: limit,
+        films: films,
     });
-
+  } catch (err) {
+      next(err);
+  }
 });
 
 
