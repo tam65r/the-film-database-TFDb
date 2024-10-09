@@ -1,9 +1,29 @@
-const { MongoClient } = require('mongodb');
-const fs = require('fs');
+import fs from 'fs';
+import csv from 'csv-parser';
+import { MongoClient } from 'mongodb';
+
+const CSV_PATH = "csv_files";
 
 const uri = 'mongodb://localhost:27017';
 
 const client = new MongoClient(uri);
+
+async function readCSV(filepath) {
+    return new Promise((resolve, reject) => {
+        const results = [];
+        fs.createReadStream(filepath)
+            .pipe(csv())
+            .on('data', (data) => results.push(data))
+            .on('end', () => {
+                console.log(`${filepath} pushed successfully.`);
+                resolve(results);
+            })
+            .on('error', (error) => {
+                reject(error);
+            });
+    });
+}
+
 
 async function insertData(db, collec, data) {
     try {
@@ -28,7 +48,6 @@ async function insertData(db, collec, data) {
 }
 
 
-const allMovies = JSON.parse(fs.readFileSync('all_movies_with_details.json', 'utf8'));
+const database = await readCSV(`${CSV_PATH}/TMDB_movie_dataset_v11.csv`);
 
-
-insertData('TFDb', 'movies',allMovies);
+insertData('TFDb', 'films', database);

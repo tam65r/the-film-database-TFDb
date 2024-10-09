@@ -22,4 +22,3 @@ const FilmSchema = new Schema({
     cast: [CastSchema]              
 });
 
-module.exports = mongoose.model("Movie", FilmSchema);
