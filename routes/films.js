@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const mongoose = require('mongoose');
-
 const Film  = require("../models/film");
 
 
@@ -56,15 +54,15 @@ router.get('/search', async function(req, res, next) {
         .skip(skip)
         .limit(limit);
 
-
-    res.json({
+    res.render('films', {query: filmName || 'Not Specified', runtime: filmRuntime || 'Not Specified', total_pages: totalPages, page: page, limit: limit, items: films});
+    /*res.json({
         query: filmName,
         runtime: filmRuntime,
         total_pages: totalPages,
         current_page: page,
         limit: limit,
         films: films,
-    });
+    });*/
   } catch (err) {
       next(err);
   }
