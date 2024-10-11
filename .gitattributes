@@ -1,2 +1,1 @@
-TFDb/all_movies_with_details.json filter=lfs diff=lfs merge=lfs -text
-TFDb/csv_files/conc_cast.json filter=lfs diff=lfs merge=lfs -text
+TFDb/csv_files/TMDB_movie_dataset_v11.csv filter=lfs diff=lfs merge=lfs -text

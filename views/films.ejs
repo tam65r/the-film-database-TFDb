@@ -1,0 +1,43 @@
+<%- include('partial/header') %>
+
+<div class="content"></div>
+    <div class="top-container">
+        <p>Name: <%= query%> | Runtime: <%= runtime%></p>
+    </div>
+    <ol class="film-list">
+        <% for(var i = 0; i < items.length; i++) {%>
+            <li class="film-item" style="background-image: url('https://image.tmdb.org/t/p/original/<%= items[i].backdrop_path %>');">
+                <div class="film-title"><%= items[i].title %></div>
+            </li>
+        <% } %>
+    </ol>
+    <div class="page-button">
+        <button class="button" onclick="redirectToNextPage('<%= query%>','<%= runtime%>','<%= page%>','<%=total_pages%>','<%=limit%>')">
+            Next Page
+        </button>
+    </div>
+    <div class="page-info">
+        <%= page%> of <%=total_pages%>
+    </div>
+
+
+</div>
+
+<%- include('partial/footer') %>
+
+<script>
+    function redirectToNextPage(query, runtime, page, totalPages, limit) {
+        
+        let url = "http://localhost:3000/api/v1/films/search?";
+
+        url = query === 'Not Specified' ? url : `${url}name=${query}&`;
+        url = runtime === 'Not Specified' ? url : `${url}runtime=${runtime}`;;
+        
+        if (page == totalPages) {
+            return;
+        }
+        let nextPage = Number(page) + 1;
+
+        window.location.href = `${url}&limit=${limit}&page=${nextPage}` ;
+    }
+</script>
