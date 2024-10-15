@@ -263,5 +263,8 @@ footer {
   background: #292929;
 }
 
-
+.error-status {
+  font-size: 100px;
+  font-style: italic;
+}
 /*END OF BUTTON*/

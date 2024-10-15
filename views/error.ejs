@@ -1,9 +1,13 @@
 <%- include('partial/header') %>
 
-<div class="content"></div>
-    <h1><%= message %></h1>
-    <h2><%= error.status %></h2>
-    <pre><%= error.stack %></pre>
+
+<div class="index-container">
+    <p class="error-status"><%= error.status %></p>
+    <div>
+        <img src="/images/icon.png" alt="TFDb Icon" class="index-icon">
+    </div>
+    <h2><%= message %></h2>
+
 </div>
 
 <%- include('partial/footer') %>
