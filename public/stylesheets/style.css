@@ -117,3 +117,56 @@ footer {
   font-size: large;
   text-decoration: solid;
 }
+
+.film-page-container {
+  width: 100%;
+  display: flex;
+  overflow: hidden;
+}
+
+.film-page-poster-section img {
+  width: 500px;
+  height: auto;
+}
+
+.film-page-details-section {
+  padding: 20px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content:center;
+}
+
+.film-page-title {
+  font-size: 28px;
+  margin: 0;
+}
+
+.film-page-quote {
+  font-style: italic;
+  color: #555;
+  margin-top: 10px;
+}
+
+.film-page-rating {
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.film-page-categories-section {
+  margin-top: 15px;
+}
+
+.film-page-categories-section span {
+  background-color: rgb(255, 120, 47);
+  padding: 5px;
+  margin-right: 5px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.film-page-description-section {
+  line-height: 1.6;
+  margin-top: 75px;
+}

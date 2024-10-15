@@ -1,10 +1,23 @@
 <%- include('partial/header') %>
 
-<div class="content"></div>
-    <h1><%= title %></h1>
-    <p>Runtime <%= runtime %></p>
-    <p>Budget <%= budget %></p>
-    <img src="https://image.tmdb.org/t/p/original/<%= poster_path %>" alt="backdrop_path" class="poster">
+<div class="film-page-container">
+    <div class="film-page-poster-section">
+        <img src="https://image.tmdb.org/t/p/original/<%= poster_path %>" alt="<%= title %> Poster" class="poster">
+    </div>
+    <div class="film-page-details-section">
+        <h1 class="film-page-title"><%= title %></h1>
+        <p class="film-page-quote"><%= tagline %></p>
+        <div class="film-page-rating"><%= vote_average %>/10</div>
+        <div class="film-page-categories-section">
+            <span><%= genres %></span>
+        </div>
+        <div class="film-page-categories-section">
+            <span><%= runtime %> mins</span>
+        </div>
+        <div class="film-page-description-section">
+            <p><%= overview %></p>
+        </div>
+    </div>
 </div>
 
 <%- include('partial/footer') %>
