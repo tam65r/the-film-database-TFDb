@@ -11,7 +11,9 @@ router.get('/search', async function(req, res, next) {
   const queryOperator = req.query.operator || 'eq';
 
   const page = parseInt(req.query.page) || 1;
-  const limit = parseInt(req.query.limit) || 10;
+  let aux = parseInt(req.query.limit) || 10;
+  
+  const limit = aux > 50 ? 50 : aux;
 
   const skip = (page - 1) * limit;
   
