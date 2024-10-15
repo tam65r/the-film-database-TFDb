@@ -1,7 +1,30 @@
 <%- include('partial/header') %>
 
-<div class="content">
-    <h2>Welcome to the Film Database</h2>
+<div class="index-container">
+    <div>
+        <img src="/images/icon.png" alt="TFDb Icon" class="index-icon">
+    </div>
+    <h2>Welcome to the Film Database!</h2>
+    <div class="index-search-container">
+        <input type="text" name="movieTitle" id="movieTitle" class="input" placeholder="Movie Title">
+        <input type="number" name="movieRuntime" id="movieRuntime" class="input" placeholder="Movie Runtime" min="0">
+        <button class="boton-elegante" onclick="fetchResults()">Search</button>
+    </div>
 </div>
 
 <%- include('partial/footer') %>
+
+
+<script>
+    function fetchResults() {
+        const movieTitle = document.getElementById('movieTitle').value;
+        const movieRuntime = document.getElementById('movieRuntime').value;
+        
+        let url = "http://localhost:3000/api/v1/films/search?";
+
+        url = movieTitle === 'Not Specified' ? url : `${url}name=${movieTitle}&`;
+        url = movieRuntime === 'Not Specified' ? url : `${url}runtime=${movieRuntime}`;;
+
+        window.location.href = url;
+    }
+</script>
