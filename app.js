@@ -36,7 +36,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/api/v1/films', filmsRouter);
+app.use('/films', filmsRouter);
+
+
+app.use((req, res, next) => {
+  const error = new Error('Page Not Found');
+  error.status = 404;
+  next(error);
+});
 
 
 app.use(errorHandler);

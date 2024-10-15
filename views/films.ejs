@@ -7,7 +7,9 @@
     <ol class="film-list">
         <% for(var i = 0; i < items.length; i++) {%>
             <li class="film-item" style="background-image: url('https://image.tmdb.org/t/p/original/<%= items[i].backdrop_path %>');">
-                <div class="film-title"><%= items[i].title %></div>
+                <a href="/films/find/<%= items[i].id %>" class="film-title">
+                    <div ><%= items[i].title %></div>
+                </a>
             </li>
         <% } %>
     </ol>
@@ -28,7 +30,7 @@
 <script>
     function redirectToNextPage(query, runtime, page, totalPages, limit) {
         
-        let url = "http://localhost:3000/api/v1/films/search?";
+        let url = "http://localhost:3000/films/search?";
 
         url = query === 'Not Specified' ? url : `${url}name=${query}&`;
         url = runtime === 'Not Specified' ? url : `${url}runtime=${runtime}`;;

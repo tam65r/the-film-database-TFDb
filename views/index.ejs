@@ -20,7 +20,7 @@
         const movieTitle = document.getElementById('movieTitle').value;
         const movieRuntime = document.getElementById('movieRuntime').value;
         
-        let url = "http://localhost:3000/api/v1/films/search?";
+        let url = "http://localhost:3000/films/search?";
 
         url = movieTitle === 'Not Specified' ? url : `${url}name=${movieTitle}&`;
         url = movieRuntime === 'Not Specified' ? url : `${url}runtime=${movieRuntime}`;;
